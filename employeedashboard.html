@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile with Leave Approval Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            overflow: hidden;
+        }
+    
+        /* Sidebar Design */
+        .sidebar {
+            width: 220px;
+            background: rgba(171, 136, 109, 0.85);
+            color: white;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+    
+        .sidebar-item {
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-in-out;
+        }
+    
+        .sidebar-item:hover {
+            transform: scale(1.05);
+        }
+    
+        .sidebar-item button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            width: 100%;
+            height: 100%;
+            transition: color 0.3s ease, transform 0.3s;
+        }
+    
+        .sidebar-item button:hover {
+            color: #D6C0B3;
+        }
+    
+        .sidebar-item i {
+            font-size: 36px;
+            margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+    
+        .sidebar-item button:hover i {
+            transform: rotate(360deg);
+        }
+    
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-left: 2px solid #D6C0B3;
+            overflow-y: auto;
+        }
+    
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            color: white;
+            border-radius: 8px;
+        }
+    
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+    
+        /* Profile Section */
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            border: 5px solid #D6C0B3;
+        }
+    
+        .profile h2 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    
+        .profile p {
+            margin: 5px 0;
+            color: #333;
+            font-weight: normal;
+        }
+    
+        .profile p strong {
+            color: #AB886D;
+        }
+    
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #AB886D;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+    
+        /* Calendar styles */
+        .calendar-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            color: white;
+            margin: 0 10px;
+        }
+    
+        .calendar-container h2 {
+            margin: 10px 0;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #fff;
+        }
+    
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            width: 100%;
+        }
+    
+        .day {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #fff;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+    
+        .absent {
+            background-color: rgba(244, 67, 54, 0.7);
+        }
+    
+        .day.active {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px
+        }
+    
+        .button {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+    
+        /* Leave Form */
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #e6d9b7;
+            border-radius: 5px;
+            background-color: #f5f0e4;
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+    
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+    
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+        </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-item">
+            <button id="profileBtn">
+                <i class="fa-solid fa-user" title="Profile"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+        <div class="sidebar-item">
+            <button onclick="activate_face_recognition()">
+                <i class="fa-solid fa-camera-retro" title = ""></i>
+                <span>Face Recognition</span>
+            </button>
+        </div>
+        <div class="sidebar-item">
+            <button id="calendarBtn">
+                <i class="fa-solid fa-calendar-days" title="Calendar"></i>
+                <span>Calendar</span>
+            </button>
+        </div>
+        <div class="sidebar-item">
+            <button id="leaveFormBtn">
+                <i class="fa-solid fa-envelope" title="Leave Form"></i>
+                <span>Leave Form</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>User Profile and Calendar Dashboard</h2>
+        </div>
+        <div class="footer">
+            <p>&copy; 2023. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile">
+            <img src="https://via.placeholder.com/150" alt="User Photo">
+            <h2>Krishnaraj</h2>
+            <p><strong>Position:</strong> employee</p>
+            <p><strong>Email:</strong> akashjoel08@gmail.com</p>
+            <p><strong>Phone:</strong> 9786014250</p>
+
+              <!-- Image Upload Section -->
+            <label for="uploadImage" style="margin-top: 10px; cursor: pointer; color: #AB886D;">
+                <strong>Change Profile Photo</strong>
+            </label>
+            <input type="file" id="uploadImage" style="display: none;" accept="image/*">
+
+            <button onclick="closeModal('profileModal')">Close</button>
+        </div>
+    </div>
+
+
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="modal">
+        <div class="modal-content calendar-container">
+            <h2>Attendance Calendar</h2>
+            <p> October </p>
+            <div class="buttons">
+                <button class="button">Previous Month</button>
+                <button class="button">Next Month</button>
+            </div>
+            <div class="days" id="calendarDays">
+                <!-- Days generated dynamically via JavaScript -->
+            </div>
+            <button onclick="closeModal('calendarModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Leave Form Modal -->
+    <div id="leaveFormModal" class="modal">
+        <div class="modal-content">
+            <h2>Leave Application Form</h2>
+            <form id="leaveForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="employeeID">Employee ID:</label>
+                <input type="number" id="employeeID" name="employeeID" required>
+
+                <label for="reason">Reason for Leave:</label>
+                <textarea id="reason" name="reason" required></textarea>
+
+                <label for="leaveDays">Number of Days:</label>
+                <input type="number" id="leaveDays" name="leaveDays" required>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" required>
+
+                <input type="submit" value="Submit">
+            </form>
+            <button onclick="closeModal('leaveFormModal')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Show/Hide Modals
+        const profileBtn = document.getElementById("profileBtn");
+        const profileModal = document.getElementById("profileModal");
+
+        const calendarBtn = document.getElementById("calendarBtn");
+        const calendarModal = document.getElementById("calendarModal");
+
+        const leaveFormBtn = document.getElementById("leaveFormBtn");
+        const leaveFormModal = document.getElementById("leaveFormModal");
+
+        profileBtn.onclick = function() {
+            profileModal.style.display = "flex";
+        }
+
+        calendarBtn.onclick = function() {
+            calendarModal.style.display = "flex";
+        }
+
+        leaveFormBtn.onclick = function() {
+            leaveFormModal.style.display = "flex";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === profileModal) {
+                profileModal.style.display = "none";
+            } else if (event.target === calendarModal) {
+                calendarModal.style.display = "none";
+            } else if (event.target === leaveFormModal) {
+                leaveFormModal.style.display = "none";
+            }
+        }
+
+        // Generate Calendar Days
+        const calendarDays = document.getElementById("calendarDays");
+
+        function createCalendar(daysInMonth) {
+            calendarDays.innerHTML = '';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.textContent = i;
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+
+        createCalendar(30); // Generates 30 days for now, can be dynamic.
+
+        // Handle Leave Form Submission
+        const leaveForm = document.getElementById("leaveForm");
+
+        leaveForm.onsubmit = function(event) {
+            event.preventDefault();
+
+            // Get Leave Form Data
+            const name = document.getElementById("name").value;
+            const employeeID = document.getElementById("employeeID").value;
+            const reason = document.getElementById("reason").value;
+            const leaveDays = parseInt(document.getElementById("leaveDays").value);
+            const startDate = new Date(document.getElementById("startDate").value);
+
+            // Mark leave days in calendar (in red)
+            markLeaveDays(startDate, leaveDays);
+
+            // Open new page with form data
+            const formData = new URLSearchParams({
+            name: name,
+            employeeID: employeeID,
+            reason: reason,
+            leaveDays: leaveDays,
+            startDate: startDate.toISOString().split('T')[0]
+        });
+
+        const url = `leaveform.html?${formData.toString()}`;
+
+        // Redirect to leaveform.html using current window
+        window.location.href = url;
+
+            // Close the leave form modal after submission
+            closeModal('leaveFormModal');
+        };
+
+        function markLeaveDays(startDate, leaveDays) {
+            const startDay = startDate.getDate();
+            for (let i = 0; i < leaveDays; i++) {
+                const dayElement = document.querySelector(`.day:nth-child(${startDay + i})`);
+                if (dayElement) {
+                    dayElement.classList.add('absent');
+                }
+            }
+        }
+        async function activate_face_recognition() {
+            try {
+                const response = await fetch('/activate-face-recognition', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('Face recognition system activated!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error connecting to the face recognition system');
+                console.error('Error:', error);
+            }
+    }
+    </script>
+</body>
+</html>

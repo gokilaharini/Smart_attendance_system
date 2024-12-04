@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leave Form Details</title>
+    <style>
+                /* Center entire thing */
+                body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e6d9b7; /* Beige background */
+        }
+
+        /* Leave Form Details style */
+        #leaveFormDetails {
+            text-align: center;
+            background-color: #f5f0e4; /* Beige background */
+            border: 1px solid #e6d9b7; /* Beige border */
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #leaveFormDetails h2 {
+            color: #4CAF50; /* Green */
+        }
+
+        #leaveFormDetails p {
+            margin-bottom: 10px;
+        }
+
+        /* Accept button style */
+        #acceptButton {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #acceptButton:hover {
+            background-color: #3e8e41; /* Darker green */
+        }
+
+        /* Reject button style */
+        #rejectButton {
+            background-color: #d32f2f; /* Red */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #rejectButton:hover {
+            background-color: #b71c1c; /* Darker red */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="leaveFormDetails">
+        <h2>Leave Form Details</h2>
+        <p>Name: <span id="submittedName"></span></p>
+        <p>ID: <span id="submittedId"></span></p>
+        <p>Reason: <span id="submittedReason"></span></p>
+        <p>Number of Days: <span id="submittedDays"></span></p>
+        <p id="statusMessage" style="display: none; font-weight: bold;"></p>
+        <button id="acceptButton">Accept</button>
+        <button id="rejectButton">Reject</button>
+    </div>
+    
+    <script>
+        // Retrieve the stored data (replace with your actual storage method)
+        const name = localStorage.getItem('name');
+        const id = localStorage.getItem('id');
+        const reason = localStorage.getItem('reason');
+        const days = localStorage.getItem('days');
+        
+        // Display the leave form details
+        const submittedName = document.getElementById('submittedName');
+        const submittedId = document.getElementById('submittedId');
+        const submittedReason = document.getElementById('submittedReason');
+        const submittedDays = document.getElementById('submittedDays');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        submittedName.textContent = name;
+        submittedId.textContent = id;
+        submittedReason.textContent = reason;
+        submittedDays.textContent = days;
+        
+        // Handle button clicks
+        const acceptButton = document.getElementById('acceptButton');
+        const rejectButton = document.getElementById('rejectButton');
+        
+        acceptButton.addEventListener('click', () => {
+            // Handle accept action (e.g., send a confirmation email, update database)
+            console.log('Leave request accepted');
+            statusMessage.textContent = 'Leave request has been ACCEPTED';
+            statusMessage.style.color = 'green';
+            statusMessage.style.display = 'block';
+            acceptButton.disabled = true;
+            rejectButton.disabled = true;
+        });
+        
+        rejectButton.addEventListener('click', () => {
+            // Handle reject action (e.g., send a rejection email, update database)
+            console.log('Leave request rejected');
+            statusMessage.textContent = 'Leave request has been REJECTED';
+            statusMessage.style.color = 'red';
+            statusMessage.style.display = 'block';
+            acceptButton.disabled = true;
+            rejectButton.disabled = true;
+        });
+    </script>
+</body>
+</html>

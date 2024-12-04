@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile with Leave Approval Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            overflow: hidden;
+        }
+
+        /* Sidebar Design */
+        .sidebar {
+            width: 220px;
+            background: rgba(171, 136, 109, 0.85);
+            color: white;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .sidebar-item {
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-item:hover {
+            transform: scale(1.05);
+        }
+
+        .sidebar-item button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            width: 100%;
+            height: 100%;
+            transition: color 0.3s ease, transform 0.3s;
+        }
+
+        .sidebar-item button:hover {
+            color: #D6C0B3;
+        }
+
+        .sidebar-item i {
+            font-size: 36px;
+            margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-item button:hover i {
+            transform: rotate(360deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-left: 2px solid #D6C0B3;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #AB886D, #D6C0B3);
+            color: white;
+            border-radius: 8px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Profile Section */
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            border: 5px solid #D6C0B3;
+        }
+
+        .profile h2 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .profile p {
+            margin: 5px 0;
+            color: #333;
+            font-weight: normal;
+        }
+
+        .profile p strong {
+            color: #AB886D;
+        }
+
+        /* Leave Approval Form */
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #e6d9b7;
+            border-radius: 5px;
+            background-color: #f5f0e4;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="sidebar">
+        <div class="sidebar-item">
+            <button id="profileBtn">
+                <i class="fa-solid fa-user" title="Profile"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+        <div class="sidebar-item">
+            <button id="attendanceDashboardBtn">
+                <i class="fa-solid fa-calendar-check" title="Attendance"></i>
+                <span>Attendance</span>
+            </button>
+        </div>
+        <div class="sidebar-item">
+            <button id="leaveApprovalFormBtn">
+                <i class="fa-solid fa-envelope-open" title="Leave Approval"></i>
+                <span>Leave Approval</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>HR Profile Dashboard</h2>
+        </div>
+        <div class="footer">
+            <p>&copy; 2023. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile">
+            <img id="profileImage" src="https://via.placeholder.com/150" alt="User Photo">
+            <h2>A.Gokila</h2>
+            <p><strong>Position:</strong> HR</p>
+            <p><strong>Email:</strong> gokila08@gmail.com</p>
+            <p><strong>Phone:</strong> 9786014250</p>
+
+            <!-- Image Upload Section -->
+            <label for="uploadImage" style="margin-top: 10px; cursor: pointer; color: #AB886D;">
+                <strong>Change Profile Photo</strong>
+            </label>
+            <input type="file" id="uploadImage" style="display: none;" accept="image/*">
+
+            <button onclick="closeModal('profileModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Attendance Dashboard Modal -->
+    <div id="attendanceDashboardModal" class="modal">
+        <div class="modal-content">
+          <h2>Attendance Dashboard</h2>
+          <p>Attendance data for the selected period will be displayed here.</p>
+          <button onclick="window.open('calender.html', '_blank')">Open Calendar</button>
+          <button onclick="closeModal('attendanceDashboardModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Leave Approval Form Modal -->
+    <div id="leaveApprovalFormModal" class="modal">
+        <div class="modal-content">
+          <h2>Leave Approval Form</h2>
+          <button onclick="closeModal('leaveApprovalFormModal'); window.location.href = 'hrleave.html';">Close and Open HR Leave Page</button>
+        </div>
+    </div>
+
+    <script>
+        // Show/Hide Modals
+        const profileBtn = document.getElementById("profileBtn");
+        const profileModal = document.getElementById("profileModal");
+
+        const leaveApprovalFormBtn = document.getElementById("leaveApprovalFormBtn");
+        const leaveApprovalFormModal = document.getElementById("leaveApprovalFormModal");
+
+        const attendanceDashboardBtn = document.getElementById("attendanceDashboardBtn");
+        const attendanceDashboardModal = document.getElementById("attendanceDashboardModal");
+
+        profileBtn.onclick = function () {
+            profileModal.style.display = "flex";
+        }
+
+        leaveApprovalFormBtn.onclick = function () {
+            leaveApprovalFormModal.style.display = "flex";
+        }
+
+        attendanceDashboardBtn.onclick = function () {
+            attendanceDashboardModal.style.display = "flex";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target === profileModal) {
+                profileModal.style.display = "none";
+            } else if (event.target === leaveApprovalFormModal) {
+                leaveApprovalFormModal.style.display = "none";
+            } else if (event.target === attendanceDashboardModal) {
+                attendanceDashboardModal.style.display = "none";
+            }
+        }
+
+        // Profile Image Upload and Preview
+        const uploadImageInput = document.getElementById("uploadImage");
+        const profileImage = document.getElementById("profileImage");
+
+        uploadImageInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profileImage.src = e.target.result; // Set the new image source
+                };
+                reader.readAsDataURL(file); // Read the file as a data URL
+            }
+        });
+    </script>
+</body>
+
+</html>
